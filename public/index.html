@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#0b1020" />
+    <title>Light Translator（同時通訳字幕）</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">本文へスキップ</a>
+
+    <header class="topbar" role="banner">
+      <div class="brand" aria-label="アプリ名">
+        <div class="brand-mark" aria-hidden="true">LT</div>
+        <div class="brand-text">
+          <div class="brand-title">Light Translator</div>
+          <div class="brand-subtitle">日英 同時通訳（字幕）</div>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <label class="sr-only" for="speechLang">音声入力言語（Web Speech）</label>
+        <select id="speechLang" class="select select-compact" aria-label="音声入力言語（Web Speech）">
+          <option value="">自動（ブラウザ既定）</option>
+          <option value="ja-JP">日本語（ja-JP）</option>
+          <option value="en-US">English（en-US）</option>
+        </select>
+        <button id="btnFontDown" class="btn btn-secondary" type="button" aria-label="字幕の文字を小さく">
+          A-
+        </button>
+        <button id="btnFontUp" class="btn btn-secondary" type="button" aria-label="字幕の文字を大きく">
+          A+
+        </button>
+        <button id="btnFullScreen" class="btn btn-secondary" type="button">
+          Full
+        </button>
+        <button id="btnStartStop" class="btn btn-primary" type="button">
+          Start
+        </button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="panel" aria-label="設定と操作">
+        <div class="tabs" role="tablist" aria-label="設定タブ">
+          <button id="tabMain" class="tab" role="tab" aria-selected="true" aria-controls="panelMain" type="button">
+            基本
+          </button>
+          <button id="tabApi" class="tab" role="tab" aria-selected="false" aria-controls="panelApi" type="button">
+            API
+          </button>
+        </div>
+
+        <div id="panelMain" class="tab-panel" role="tabpanel" aria-labelledby="tabMain">
+          <section class="panel-section" aria-labelledby="hControls">
+            <h2 id="hControls" class="panel-title">操作</h2>
+
+            <div class="field">
+              <div class="field-row">
+                <span class="label">状態</span>
+                <span id="statusBadge" class="badge" aria-live="polite">停止中</span>
+              </div>
+              <p id="statusDetail" class="help" aria-live="polite">
+                API キーは「API」タブで設定できます。
+              </p>
+            </div>
+
+            <div class="field">
+              <label class="label" for="translateDelay">翻訳の待ち時間</label>
+              <input
+                id="translateDelay"
+                class="range"
+                type="range"
+                min="300"
+                max="2000"
+                step="100"
+                value="1100"
+                aria-describedby="translateDelayHelp"
+              />
+              <div class="field-row">
+                <span class="help">短い</span>
+                <span id="translateDelayValue" class="help">1100ms</span>
+                <span class="help">長い</span>
+              </div>
+              <p id="translateDelayHelp" class="help">
+                話し終わり・間（ポーズ）を待ってからまとめて翻訳します。途切れが気になる場合は少し長めにしてください。
+              </p>
+            </div>
+          </section>
+
+          <section class="panel-section" aria-labelledby="hCaption">
+            <h2 id="hCaption" class="panel-title">字幕表示</h2>
+
+            <div class="field">
+              <label class="label" for="fontSize">文字サイズ</label>
+              <input id="fontSize" class="range" type="range" min="24" max="72" step="2" value="44" />
+              <div class="field-row">
+                <span class="help">小</span>
+                <span id="fontSizeValue" class="help">44px</span>
+                <span class="help">大</span>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="check">
+                <input id="showOriginal" type="checkbox" checked />
+                <label for="showOriginal">原文も表示する</label>
+              </div>
+              <div class="check">
+                <input id="highContrast" type="checkbox" />
+                <label for="highContrast">高コントラスト</label>
+              </div>
+              <div class="check">
+                <input id="reduceMotion" type="checkbox" />
+                <label for="reduceMotion">アニメーションを抑える</label>
+              </div>
+            </div>
+
+            <div class="field">
+              <button id="btnClear" class="btn btn-tertiary" type="button">履歴をクリア</button>
+            </div>
+          </section>
+
+          <section class="panel-section" aria-labelledby="hNotes">
+            <h2 id="hNotes" class="panel-title">注意</h2>
+            <ul class="list">
+              <li>音声認識はブラウザの Web Speech API を使用します（Chrome/Edge 推奨）。</li>
+              <li>翻訳・言語判定は Google Cloud Translation API を使用します。</li>
+            </ul>
+          </section>
+        </div>
+
+        <div id="panelApi" class="tab-panel" role="tabpanel" aria-labelledby="tabApi" hidden>
+          <section class="panel-section" aria-labelledby="hApi">
+            <h2 id="hApi" class="panel-title">API 設定</h2>
+
+            <div class="field">
+              <label class="label" for="apiKey">Google Cloud API キー</label>
+              <div class="inline">
+                <input
+                  id="apiKey"
+                  class="input"
+                  type="password"
+                  inputmode="text"
+                  autocomplete="off"
+                  spellcheck="false"
+                  aria-describedby="apiKeyHelp"
+                  placeholder="AIza..."
+                />
+                <button id="btnToggleKey" class="btn btn-tertiary" type="button" aria-pressed="false">
+                  表示
+                </button>
+              </div>
+              <div class="inline">
+                <button id="btnSaveKey" class="btn btn-secondary" type="button">保存</button>
+                <button id="btnTestKey" class="btn btn-secondary" type="button">接続テスト</button>
+                <a class="btn btn-tertiary" href="/help/api-key.html" target="_blank" rel="noopener">
+                  取得方法
+                </a>
+              </div>
+              <p id="apiKeyHelp" class="help">
+                API キーはこの PC のブラウザにのみ保存（localStorage）されます。社内ルールに従って管理してください。
+              </p>
+            </div>
+          </section>
+        </div>
+      </aside>
+
+      <main id="main" class="main" role="main">
+        <section class="stage" aria-label="字幕表示エリア">
+          <div class="stage-inner">
+            <div class="subtitles" data-contrast="normal">
+              <div id="subtitleOriginal" class="subtitle subtitle-original" aria-live="polite"></div>
+              <div id="subtitleTranslated" class="subtitle subtitle-translated" aria-live="polite"></div>
+              <div id="subtitleHint" class="subtitle-hint" aria-live="polite"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="history" aria-label="履歴">
+          <div class="history-head">
+            <h2 class="history-title">履歴</h2>
+            <div class="history-meta">
+              <span id="historyCount" class="help">0 件</span>
+            </div>
+          </div>
+          <ol id="historyList" class="history-list"></ol>
+        </section>
+
+        <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+        <div id="alert" class="alert" role="alert" aria-live="assertive" aria-atomic="true"></div>
+      </main>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

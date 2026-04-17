@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#0b1020" />
+    <title>API キー取得方法（Google Cloud Translation）</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+      .doc {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 18px;
+      }
+      .doc .panel-section {
+        box-shadow: var(--shadow);
+      }
+      .doc h1 {
+        margin: 6px 0 10px 0;
+        font-size: 20px;
+      }
+      .doc h2 {
+        margin: 18px 0 8px 0;
+        font-size: 14px;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .doc p {
+        color: var(--muted);
+        margin: 8px 0;
+      }
+      .doc ol,
+      .doc ul {
+        color: var(--text);
+      }
+      .doc code {
+        padding: 2px 6px;
+        border-radius: 10px;
+        border: 1px solid var(--panel-border);
+        background: var(--panel-bg);
+      }
+      .doc .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="doc" role="main">
+      <div class="top">
+        <div>
+          <h1>Google Cloud API キー取得方法（Translation）</h1>
+          <p>このアプリは Cloud Translation API を使用して言語判定と翻訳を行います。</p>
+        </div>
+        <button id="btnBack" class="btn btn-secondary" type="button">アプリに戻る</button>
+      </div>
+
+      <section class="panel-section" aria-label="手順">
+        <h2>前提</h2>
+        <ul class="list">
+          <li>Google アカウント</li>
+          <li>組織の方針により、課金設定が必要になる場合があります</li>
+        </ul>
+
+        <h2>1. プロジェクト作成</h2>
+        <ol class="list">
+          <li>Google Cloud Console を開く</li>
+          <li>プロジェクト セレクタから「新しいプロジェクト」を作成</li>
+        </ol>
+
+        <h2>2. Translation API を有効化</h2>
+        <ol class="list">
+          <li>対象プロジェクトを選択</li>
+          <li>「API とサービス」→「ライブラリ」</li>
+          <li>「Cloud Translation API」を検索して「有効にする」</li>
+        </ol>
+
+        <h2>3. API キー作成</h2>
+        <ol class="list">
+          <li>「API とサービス」→「認証情報」</li>
+          <li>「認証情報を作成」→「API キー」</li>
+          <li>発行されたキー（例: <code>AIza...</code>）を控える</li>
+        </ol>
+
+        <h2>4.（推奨）キーを制限</h2>
+        <p>企業利用では、可能な範囲でキーを制限してください。</p>
+        <ul class="list">
+          <li>API の制限: Cloud Translation API のみに限定</li>
+          <li>アプリケーションの制限: 可能なら HTTP リファラで <code>http://127.0.0.1:5173/*</code> を許可</li>
+        </ul>
+
+        <h2>5. アプリへ設定</h2>
+        <ol class="list">
+          <li>アプリ画面の「API」タブを開く</li>
+          <li>API キーを貼り付けて「保存」</li>
+          <li>「接続テスト」が成功したら準備完了</li>
+        </ol>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        const btn = document.getElementById("btnBack");
+        if (!btn) return;
+        btn.addEventListener("click", () => {
+          // Browsers only allow closing tabs that were opened by script (e.g. target=_blank).
+          // Try to close; if blocked, fall back to returning to the app.
+          window.close();
+          setTimeout(() => {
+            if (!document.hidden) window.location.href = "/";
+          }, 150);
+        });
+      })();
+    </script>
+  </body>
+</html>

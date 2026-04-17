@@ -1,0 +1,12 @@
+{
+  "name": "light-translator",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ローカルWebブラウザで動く、日英同時通訳（字幕）アプリ",
+  "license": "UNLICENSED",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server/server.js"
+  }
+}
+
